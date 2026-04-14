@@ -37,15 +37,7 @@ const watchSchema = new mongoose.Schema({
 const Watch = mongoose.model('Watch', watchSchema);
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
-app.use(cors({
-    origin: (origin, cb) => {
-        if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-        cb(new Error('Not allowed by CORS'));
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-}));
+app.use(cors());
 
 // JSON + urlencoded only for non-multipart routes
 app.use((req, res, next) => {
@@ -259,11 +251,6 @@ app.delete('/api/watches/:id', requireAuth, csrfProtect, async (req, res) => {
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
-});
-
-// CSRF token (simple implementation)
-app.get('/api/csrf-token', (req, res) => {
-    res.json({ csrfToken: 'dayal-csrf-' + Date.now() });
 });
 
 // Admin login
