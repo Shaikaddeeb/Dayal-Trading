@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Dayal Trading LLC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Admin Dashboard</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <section style="padding-top: 120px; padding-bottom: 50px; text-align: center;">
+        <h1 style="font-size: 48px; color: #D4AF37; margin-bottom: 20px;">Watch Management</h1>
+    </section>
+
+    <!-- Manage Accessories Section -->
+    <div style="max-width: 800px; margin: 0 auto; padding: 50px; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 50px;">
+        <h2 style="color: #D4AF37; margin-bottom: 30px; text-align: center;">Manage Accessories</h2>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+            <input type="text" id="accName" placeholder="Name (e.g. Leather Strap)" style="flex:1; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <select id="accType" style="padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+                <option value="Strap">Strap</option>
+                <option value="Battery">Battery</option>
+            </select>
+            <input type="text" id="accPrice" placeholder="Price" style="flex:1; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <input type="text" id="accDesc" placeholder="Description" style="flex:2; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <input type="file" id="accImgFile" multiple style="flex:2; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;" onchange="previewImages(this,'accImgPreview')">
+            <small style="color:#D4AF37;display:block;width:100%;margin-top:-10px;margin-bottom:5px;">Upload multiple images (hold Ctrl/Cmd) or enter URL:</small>
+            <div id="accImgPreview" style="display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-bottom:5px;"></div>
+            <input type="url" id="accImg" placeholder="Image URL" style="flex:2; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <button onclick="addAccessory()" style="padding: 15px 25px; background: #D4AF37; border: none; color: #000; font-size: 16px; cursor: pointer; font-weight: 600;">Add</button>
+        </div>
+        <div id="accessoriesList"></div>
+    </div>
+
+    <!-- Manage Brands Section -->
+    <div style="max-width: 800px; margin: 0 auto; padding: 50px; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 50px;">
+        <h2 style="color: #D4AF37; margin-bottom: 30px; text-align: center;">Manage Brands</h2>
+        <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+            <input type="text" id="brandName" placeholder="Brand Name" style="flex:1; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <input type="text" id="brandTagline" placeholder="Tagline (e.g. Swiss Luxury)" style="flex:1; padding: 15px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <button onclick="addBrand()" style="padding: 15px 25px; background: #D4AF37; border: none; color: #000; font-size: 16px; cursor: pointer; font-weight: 600;">Add</button>
+        </div>
+        <div id="brandsList"></div>
+    </div>
+
+    <div style="max-width: 800px; margin: 0 auto; padding: 50px; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 50px;">
+        <h2 style="color: #D4AF37; margin-bottom: 30px; text-align: center;">Add New Watch</h2>
+        <form id="addWatchForm" onsubmit="addWatch(event)">
+            <select id="category" required style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+                <option value="">Select Category</option>
+                <option value="men">Men's Watch</option>
+                <option value="women">Women's Watch</option>
+            </select>
+            <input type="text" id="brand" placeholder="Brand" required style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <input type="text" id="name" placeholder="Watch Name" required style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <input type="text" id="price" placeholder="Price (e.g., $1,500)" required style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <select id="type" required style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+                <option value="">Select Type</option>
+                <option value="Classic">Classic</option>
+                <option value="Sport">Sport</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Digital">Digital</option>
+            </select>
+            <textarea id="description" placeholder="Description" required rows="4" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px; resize: vertical;"></textarea>
+            <input type="file" id="imageFiles" multiple style="width: 100%; padding: 15px; margin-bottom: 10px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;" onchange="previewImages(this,'watchImgPreview')">
+            <small style="color: #D4AF37; display: block; margin-bottom: 10px;">Select multiple images (hold Ctrl/Cmd)</small>
+            <div id="watchImgPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;"></div>
+            <input type="url" id="image" placeholder="Or enter Image URL" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <button type="submit" style="width: 100%; padding: 15px; background: #D4AF37; border: none; color: #000; font-size: 18px; cursor: pointer; font-weight: 600;">Add Watch</button>
+        </form>
+        <p id="addMessage" style="text-align: center; margin-top: 20px; color: #D4AF37; display: none;">Watch added successfully!</p>
+    </div>
+
+    <div style="max-width: 1400px; margin: 0 auto; padding: 50px;">
+        <h2 style="color: #D4AF37; margin-bottom: 30px; text-align: center; font-size: 36px;">Manage Watches</h2>
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <button onclick="showCategory('men')" style="padding: 15px 30px; background: #D4AF37; border: none; color: #000; font-size: 16px; cursor: pointer; margin: 0 10px; font-weight: 600;">Men's Watches</button>
+            <button onclick="showCategory('women')" style="padding: 15px 30px; background: #D4AF37; border: none; color: #000; font-size: 16px; cursor: pointer; margin: 0 10px; font-weight: 600;">Women's Watches</button>
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <input type="text" id="searchInput" placeholder="Search by brand or watch name..." style="padding: 15px; width: 400px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px; margin-right: 10px;">
+            <button onclick="searchWatches()" style="padding: 15px 30px; background: #D4AF37; border: none; color: #000; font-size: 16px; cursor: pointer; font-weight: 600;">Search</button>
+            <button onclick="clearSearch()" style="padding: 15px 30px; background: transparent; border: 1px solid #D4AF37; color: #D4AF37; font-size: 16px; cursor: pointer; margin-left: 10px;">Clear</button>
+        </div>
+
+        <div id="watchesList"></div>
+    </div>
+
+    <!-- Ticker Strip -->
+    <div class="ticker-wrap">
+        <div class="ticker-track">
+            <span class="ticker-item"><span>✦</span> Dayal Trading LLC — Dubai's Finest Watch Store</span>
+            <span class="ticker-item"><span>✦</span> Luxury Timepieces for Every Wrist</span>
+            <span class="ticker-item"><span>✦</span> Rolex · Omega · Tag Heuer · Seiko · Casio · Tissot</span>
+            <span class="ticker-item"><span>✦</span> Time is the Most Precious Luxury</span>
+            <span class="ticker-item"><span>✦</span> Authentic Watches — Guaranteed Quality</span>
+            <span class="ticker-item"><span>✦</span> WhatsApp Us for Exclusive Deals</span>
+            <span class="ticker-item"><span>✦</span> A Watch is Not Just an Accessory — It's a Statement</span>
+            <span class="ticker-item"><span>✦</span> Dayal Trading LLC — Dubai's Finest Watch Store</span>
+            <span class="ticker-item"><span>✦</span> Luxury Timepieces for Every Wrist</span>
+            <span class="ticker-item"><span>✦</span> Rolex · Omega · Tag Heuer · Seiko · Casio · Tissot</span>
+            <span class="ticker-item"><span>✦</span> Time is the Most Precious Luxury</span>
+            <span class="ticker-item"><span>✦</span> Authentic Watches — Guaranteed Quality</span>
+            <span class="ticker-item"><span>✦</span> WhatsApp Us for Exclusive Deals</span>
+            <span class="ticker-item"><span>✦</span> A Watch is Not Just an Accessory — It's a Statement</span>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dayal Trading LLC. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Edit Accessory Modal -->
+    <div id="editAccModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;z-index:3000;">
+        <button onclick="closeEditAcc()" style="position:fixed;top:20px;right:25px;background:none;border:none;color:#D4AF37;font-size:44px;cursor:pointer;z-index:3001;line-height:1;">&times;</button>
+        <div style="background:#0a0a0a;border:2px solid #D4AF37;padding:40px;max-width:550px;width:90%;border-radius:10px;max-height:85vh;overflow-y:auto;margin-top:30px;">
+            <h2 style="color:#D4AF37;margin-bottom:25px;text-align:center;">Edit Accessory</h2>
+            <form onsubmit="saveEditAcc(event)">
+                <input type="text" id="editAccName" placeholder="Name" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <select id="editAccType" style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                    <option value="Strap">Strap</option>
+                    <option value="Battery">Battery</option>
+                </select>
+                <input type="text" id="editAccPrice" placeholder="Price" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <input type="text" id="editAccDesc" placeholder="Description" style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <div style="margin-bottom:15px;text-align:center;">
+                    <p style="color:#aaa;font-size:13px;margin-bottom:8px;">Current Image:</p>
+                    <img id="editAccCurrentImg" style="width:100px;height:100px;object-fit:contain;background:#000;border:1px solid rgba(212,175,55,0.3);border-radius:5px;">
+                </div>
+                <input type="file" id="editAccImgFile" multiple style="width:100%;padding:12px;margin-bottom:10px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <small style="color:#D4AF37;display:block;margin-bottom:10px;">Upload new image(s) — hold Ctrl/Cmd for multiple</small>
+                <input type="url" id="editAccImgUrl" placeholder="Or enter new Image URL" style="width:100%;padding:12px;margin-bottom:20px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <button type="submit" style="width:100%;padding:14px;background:#D4AF37;border:none;color:#000;font-size:17px;cursor:pointer;font-weight:600;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <div id="editModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;z-index:3000;">
+        <!-- X button fixed top-right of screen -->
+        <button onclick="closeEditModal()" style="position:fixed;top:20px;right:25px;background:none;border:none;color:#D4AF37;font-size:44px;cursor:pointer;z-index:3001;line-height:1;">&times;</button>
+        <div style="background:#0a0a0a;border:2px solid #D4AF37;padding:40px;max-width:600px;width:90%;border-radius:10px;max-height:85vh;overflow-y:auto;margin-top:30px;">
+            <h2 style="color:#D4AF37;margin-bottom:25px;text-align:center;">Edit Watch</h2>
+            <form id="editForm" onsubmit="saveEdit(event)">
+                <select id="editCategory" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                    <option value="men">Men's Watch</option>
+                    <option value="women">Women's Watch</option>
+                </select>
+                <input type="text" id="editBrand" placeholder="Brand" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <input type="text" id="editName" placeholder="Watch Name" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <input type="text" id="editPrice" placeholder="Price" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <select id="editType" required style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                    <option value="Classic">Classic</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Luxury">Luxury</option>
+                    <option value="Digital">Digital</option>
+                </select>
+                <textarea id="editDesc" placeholder="Description" rows="3" style="width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;resize:vertical;"></textarea>
+                <div style="margin-bottom:15px;text-align:center;">
+                    <p style="color:#aaa;font-size:13px;margin-bottom:8px;">Current Image:</p>
+                    <img id="editCurrentImg" style="width:120px;height:120px;object-fit:contain;background:#000;border:1px solid rgba(212,175,55,0.3);border-radius:5px;">
+                </div>
+                <input type="file" id="editImageFile" multiple style="width:100%;padding:12px;margin-bottom:10px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <small style="color:#D4AF37;display:block;margin-bottom:15px;">Upload new image(s) to replace current</small>
+                <input type="url" id="editImageUrl" placeholder="Or enter new Image URL" style="width:100%;padding:12px;margin-bottom:20px;background:#1a1a1a;border:1px solid #D4AF37;color:#fff;font-size:15px;">
+                <button type="submit" style="width:100%;padding:14px;background:#D4AF37;border:none;color:#000;font-size:17px;cursor:pointer;font-weight:600;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        if (!localStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'about.html';
+        }
+
+        // ── Auth + CSRF helpers ────────────────────────────────────────────────
+        const authToken = localStorage.getItem('adminToken') || '';
+        let csrfToken = '';
+        async function getCsrf() {
+            if (csrfToken) return csrfToken;
+            const r = await fetch('/api/csrf-token');
+            const d = await r.json();
+            csrfToken = d.csrfToken;
+            return csrfToken;
+        }
+        async function authHeaders(isJson = true) {
+            const csrf = await getCsrf();
+            const h = { 'Authorization': 'Bearer ' + authToken, 'x-csrf-token': csrf };
+            if (isJson) h['Content-Type'] = 'application/json';
+            return h;
+        }
+
+        let currentCategory = 'men';
+        let currentWatches = [];
+
+        // ── Add Watch ──────────────────────────────────────────────────────────
+        function addWatch(e) {
+            e.preventDefault();
+            const category = document.getElementById('category').value;
+            const imageFiles = document.getElementById('imageFiles').files;
+            const imageUrl = document.getElementById('image').value;
+
+            if (imageFiles.length > 0) {
+                const formData = new FormData();
+                formData.append('category', category);
+                const watch = {
+                    brand: document.getElementById('brand').value,
+                    name:  document.getElementById('name').value,
+                    price: document.getElementById('price').value,
+                    type:  document.getElementById('type').value,
+                    desc:  document.getElementById('description').value
+                };
+                formData.append('watch', JSON.stringify(watch));
+                // field name must be 'images' to match upload.array('images')
+                Array.from(imageFiles).forEach(f => formData.append('images', f));
+                authHeaders(false).then(h => {
+                    delete h['Content-Type'];
+                    fetch('/api/add-watch', { method: 'POST', headers: h, body: formData })
+                        .then(r => r.json()).then(handleAddResponse).catch(handleAddError);
+                });
+            } else if (imageUrl) {
+                const watch = {
+                    brand: document.getElementById('brand').value,
+                    name:  document.getElementById('name').value,
+                    price: document.getElementById('price').value,
+                    type:  document.getElementById('type').value,
+                    desc:  document.getElementById('description').value,
+                    img:   imageUrl
+                };
+                authHeaders().then(h => {
+                    fetch('/api/add-watch', { method: 'POST', headers: h, body: JSON.stringify({ category, watch }) })
+                        .then(r => r.json()).then(handleAddResponse).catch(handleAddError);
+                });
+            } else {
+                alert('Please select an image file or enter an image URL');
+            }
+        }
+
+        function previewImages(input, previewId) {
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = '';
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.cssText = 'width:70px;height:70px;object-fit:cover;border:2px solid #D4AF37;border-radius:5px;';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function handleAddResponse(data) {
+            if (data.success) {
+                document.getElementById('addMessage').style.display = 'block';
+                document.getElementById('addWatchForm').reset();
+                document.getElementById('watchImgPreview').innerHTML = '';
+                setTimeout(() => document.getElementById('addMessage').style.display = 'none', 3000);
+                showCategory(currentCategory);
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error'));
+            }
+        }
+
+        function handleAddError(err) {
+            console.error(err);
+            alert('Network error adding watch');
+        }
+
+        // ── Fetch & Display ────────────────────────────────────────────────────
+        function showCategory(category) {
+            currentCategory = category;
+            fetch('/api/watches/' + category)
+                .then(r => r.json())
+                .then(watches => { currentWatches = watches; renderWatches(watches); })
+                .catch(() => alert('Failed to load watches'));
+        }
+
+        function renderWatches(watches) {
+            const list = document.getElementById('watchesList');
+            if (!watches.length) {
+                list.innerHTML = '<p style="text-align:center;color:#D4AF37;font-size:24px;padding:80px 0;">No watches found</p>';
+                return;
+            }
+            list.innerHTML = watches.map(w => `
+                <div style="background:#0a0a0a;border:1px solid rgba(212,175,55,0.3);padding:20px;margin-bottom:20px;display:grid;grid-template-columns:150px 1fr auto;gap:20px;align-items:center;">
+                    <img src="${w.img}" style="width:150px;height:150px;object-fit:contain;background:#000;">
+                    <div>
+                        <div style="color:#D4AF37;font-weight:600;margin-bottom:5px;">${w.brand}</div>
+                        <div style="font-size:20px;margin-bottom:5px;">${w.name}</div>
+                        <div style="color:#D4AF37;font-size:18px;margin-bottom:5px;">${w.price}</div>
+                        <div style="color:#aaa;margin-bottom:5px;">${w.desc}</div>
+                        <div style="display:inline-block;padding:5px 15px;background:rgba(212,175,55,0.2);color:#D4AF37;font-size:12px;border:1px solid #D4AF37;">${w.type}</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                        <button onclick="openEditModal('${w._id}','${w.category}','${w.brand.replace(/'/g,"&#39;")}','${w.name.replace(/'/g,"&#39;")}','${w.price}','${w.type}','${w.desc.replace(/'/g,"&#39;")}','${w.img}')" style="padding:10px 20px;background:transparent;border:1px solid #D4AF37;color:#D4AF37;cursor:pointer;font-weight:600;">Edit</button>
+                        <button onclick="deleteWatch('${w._id}')" style="padding:10px 20px;background:#D4AF37;border:none;color:#000;cursor:pointer;font-weight:600;">Delete</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function searchWatches() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            if (!term) { renderWatches(currentWatches); return; }
+            renderWatches(currentWatches.filter(w =>
+                w.brand.toLowerCase().includes(term) || w.name.toLowerCase().includes(term)));
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderWatches(currentWatches);
+        }
+
+        // ── Delete Watch ───────────────────────────────────────────────────────
+        function deleteWatch(id) {
+            if (!confirm('Delete this watch? This also removes the image from Cloudinary.')) return;
+            authHeaders().then(h => {
+                fetch('/api/watches/' + id, { method: 'DELETE', headers: h })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) showCategory(currentCategory);
+                        else alert('Delete failed: ' + data.error);
+                    })
+                    .catch(() => alert('Network error'));
+            });
+        }
+
+        // ── Edit Watch ─────────────────────────────────────────────────────────
+        let editingId = null;
+        function openEditModal(id, category, brand, name, price, type, desc, img) {
+            editingId = id;
+            document.getElementById('editCategory').value = category;
+            document.getElementById('editBrand').value = brand;
+            document.getElementById('editName').value = name;
+            document.getElementById('editPrice').value = price;
+            document.getElementById('editType').value = type;
+            document.getElementById('editDesc').value = desc;
+            document.getElementById('editCurrentImg').src = img;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingId = null;
+        }
+        function saveEdit(e) {
+            e.preventDefault();
+            const imageFiles = document.getElementById('editImageFile').files;
+            const imageUrl   = document.getElementById('editImageUrl').value.trim();
+            const category   = document.getElementById('editCategory').value;
+            const watchData  = {
+                brand:    document.getElementById('editBrand').value,
+                name:     document.getElementById('editName').value,
+                price:    document.getElementById('editPrice').value,
+                type:     document.getElementById('editType').value,
+                desc:     document.getElementById('editDesc').value,
+                category: category
+            };
+
+            if (imageFiles.length > 0) {
+                const formData = new FormData();
+                formData.append('category', category);
+                formData.append('watch', JSON.stringify(watchData));
+                // field name must be 'images' to match upload.array('images')
+                Array.from(imageFiles).forEach(f => formData.append('images', f));
+                authHeaders(false).then(h => {
+                    delete h['Content-Type'];
+                    fetch('/api/watches/' + editingId, { method: 'PUT', headers: h, body: formData })
+                        .then(r => r.json()).then(handleEditResponse).catch(e => alert('Network error: ' + e.message));
+                });
+            } else {
+                // no new image — send JSON with existing img
+                watchData.img = imageUrl || document.getElementById('editCurrentImg').src;
+                authHeaders().then(h => {
+                    fetch('/api/watches/' + editingId, { method: 'PUT', headers: h, body: JSON.stringify(watchData) })
+                        .then(r => r.json()).then(handleEditResponse).catch(e => alert('Network error: ' + e.message));
+                });
+            }
+        }
+        function handleEditResponse(data) {
+            if (data.success) {
+                closeEditModal();
+                showCategory(currentCategory);
+            } else alert('Edit failed: ' + (data.error || 'Unknown error'));
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'index.html';
+        }
+
+        // Brand Management
+        const defaultBrands = [
+            { name: 'Rolex', tagline: 'Swiss Luxury Excellence' },
+            { name: 'Omega', tagline: 'Precision Timekeeping' },
+            { name: 'Tag Heuer', tagline: 'Swiss Avant-Garde' },
+            { name: 'Seiko', tagline: 'Japanese Innovation' },
+            { name: 'Tissot', tagline: 'Swiss Tradition' },
+            { name: 'Casio', tagline: 'Technology & Style' },
+            { name: 'Fossil', tagline: 'American Classic' },
+            { name: 'Citizen', tagline: 'Eco-Drive Technology' },
+            { name: 'Longines', tagline: 'Elegance & Heritage' },
+            { name: 'Rado', tagline: 'Master of Materials' }
+        ];
+
+        let customBrands = JSON.parse(localStorage.getItem('customBrands') || '[]');
+        let deletedBrands = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
+
+        function saveAll() {
+            localStorage.setItem('customBrands', JSON.stringify(customBrands));
+            localStorage.setItem('deletedBrands', JSON.stringify(deletedBrands));
+        }
+
+        function addBrand() {
+            const name = document.getElementById('brandName').value.trim();
+            const tagline = document.getElementById('brandTagline').value.trim();
+            if (!name) return alert('Enter a brand name');
+            const allNames = [...defaultBrands.map(b=>b.name), ...customBrands.map(b=>b.name)];
+            if (allNames.find(n => n.toLowerCase() === name.toLowerCase())) {
+                // restore if deleted
+                deletedBrands = deletedBrands.filter(d => d.toLowerCase() !== name.toLowerCase());
+                saveAll();
+                return renderBrands();
+            }
+            customBrands.push({ name, tagline: tagline || 'Premium Timepieces' });
+            saveAll();
+            document.getElementById('brandName').value = '';
+            document.getElementById('brandTagline').value = '';
+            renderBrands();
+        }
+
+        function deleteBrand(name, isDefault) {
+            if (!confirm('Delete this brand?')) return;
+            if (isDefault) {
+                deletedBrands.push(name);
+            } else {
+                customBrands = customBrands.filter(b => b.name !== name);
+            }
+            saveAll();
+            renderBrands();
+        }
+
+        function renderBrands() {
+            const list = document.getElementById('brandsList');
+            const activeBrands = [
+                ...defaultBrands.filter(b => !deletedBrands.includes(b.name)).map(b => ({...b, isDefault: true})),
+                ...customBrands.map(b => ({...b, isDefault: false}))
+            ];
+            list.innerHTML = activeBrands.map(b => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:15px;border:1px solid rgba(212,175,55,0.3);margin-bottom:10px;background:#111;">
+                    <div>
+                        <span style="color:#D4AF37;font-weight:600;font-size:18px;">${b.name}</span>
+                        <span style="color:#aaa;margin-left:15px;font-size:14px;">${b.tagline}</span>
+                        ${b.isDefault ? '<span style="color:#555;margin-left:10px;font-size:12px;">(default)</span>' : ''}
+                    </div>
+                    <button onclick="deleteBrand('${b.name}', ${b.isDefault})" style="padding:8px 20px;background:#D4AF37;border:none;color:#000;cursor:pointer;font-weight:600;">Delete</button>
+                </div>
+            `).join('') || '<p style="color:#aaa;text-align:center;">No brands.</p>';
+        }
+
+        // Accessories Management
+        let accessories = [];
+        let editingAccIdx = null;
+
+        function addAccessory() {
+            const name     = document.getElementById('accName').value.trim();
+            const type     = document.getElementById('accType').value;
+            const price    = document.getElementById('accPrice').value.trim();
+            const desc     = document.getElementById('accDesc').value.trim();
+            const imgFiles = document.getElementById('accImgFile').files;
+            const imgUrl   = document.getElementById('accImg').value.trim();
+            if (!name || !price) return alert('Enter name and price');
+            if (imgFiles.length > 0) {
+                const images = [];
+                let done = 0;
+                Array.from(imgFiles).forEach((file, i) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        images[i] = e.target.result;
+                        if (++done === imgFiles.length) saveAccessory(name, type, price, desc, images[0], images);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                saveAccessory(name, type, price, desc, imgUrl, imgUrl ? [imgUrl] : []);
+            }
+        }
+
+        function saveAccessory(name, type, price, desc, img, images) {
+            const accData = { name, type, price, desc, img, images };
+            authHeaders().then(h => fetch('/api/accessories', {
+                method: 'POST', headers: h, body: JSON.stringify(accData)
+            })).then(r => r.json()).then(data => {
+                if (data.success) {
+                    document.getElementById('accName').value = '';
+                    document.getElementById('accPrice').value = '';
+                    document.getElementById('accDesc').value = '';
+                    document.getElementById('accImg').value = '';
+                    document.getElementById('accImgFile').value = '';
+                    document.getElementById('accImgPreview').innerHTML = '';
+                    loadAccessoriesFromServer();
+                } else { alert('Error saving accessory: ' + (data.error || 'Unknown')); }
+            }).catch(e => alert('Network error: ' + e.message));
+        }
+
+        function loadAccessoriesFromServer() {
+            fetch('/api/accessories').then(r => r.json()).then(data => {
+                accessories = data;
+                renderAccessories();
+            }).catch(e => {
+                document.getElementById('accessoriesList').innerHTML = '<p style="color:red;text-align:center;">Server offline — start the server to manage accessories.</p>';
+            });
+        }
+
+        function deleteAccessory(index) {
+            if (!confirm('Delete this accessory?')) return;
+            const acc = accessories[index];
+            const id = acc._id;
+            if (id) {
+                authHeaders().then(h => fetch('/api/accessories/' + id, { method: 'DELETE', headers: h }))
+                    .then(r => r.json())
+                    .then(() => loadAccessoriesFromServer())
+                    .catch(() => loadAccessoriesFromServer());
+            } else {
+                accessories.splice(index, 1);
+                localStorage.setItem('accessories', JSON.stringify(accessories));
+                renderAccessories();
+            }
+        }
+
+        function openEditAcc(i) {
+            editingAccIdx = i;
+            const a = accessories[i];
+            document.getElementById('editAccName').value  = a.name;
+            document.getElementById('editAccType').value  = a.type;
+            document.getElementById('editAccPrice').value = a.price;
+            document.getElementById('editAccDesc').value  = a.desc || '';
+            document.getElementById('editAccCurrentImg').src = a.img || '';
+            document.getElementById('editAccCurrentImg').style.display = a.img ? 'inline-block' : 'none';
+            document.getElementById('editAccModal').style.display = 'flex';
+        }
+        function closeEditAcc() {
+            document.getElementById('editAccModal').style.display = 'none';
+            editingAccIdx = null;
+        }
+        function saveEditAcc(e) {
+            e.preventDefault();
+            const imgFiles = document.getElementById('editAccImgFile').files;
+            const imgUrl   = document.getElementById('editAccImgUrl').value.trim();
+            const acc      = accessories[editingAccIdx];
+            const updated  = {
+                name:  document.getElementById('editAccName').value.trim(),
+                type:  document.getElementById('editAccType').value,
+                price: document.getElementById('editAccPrice').value.trim(),
+                desc:  document.getElementById('editAccDesc').value.trim(),
+                img:   acc.img,
+                images: acc.images || []
+            };
+            function doSave() {
+                const id = acc._id;
+                if (id) {
+                    authHeaders().then(h => fetch('/api/accessories/' + id, {
+                        method: 'PUT', headers: h, body: JSON.stringify(updated)
+                    })).then(r => r.json()).then(() => {
+                        closeEditAcc();
+                        loadAccessoriesFromServer();
+                    }).catch(() => {
+                        closeEditAcc();
+                        loadAccessoriesFromServer();
+                    });
+                } else {
+                    accessories[editingAccIdx] = updated;
+                    localStorage.setItem('accessories', JSON.stringify(accessories));
+                    closeEditAcc();
+                    renderAccessories();
+                }
+            }
+            if (imgFiles.length > 0) {
+                const images = [];
+                let done = 0;
+                Array.from(imgFiles).forEach((file, i) => {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        images[i] = ev.target.result;
+                        if (++done === imgFiles.length) {
+                            updated.img = images[0];
+                            updated.images = images;
+                            doSave();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+                return;
+            } else if (imgUrl) {
+                updated.img = imgUrl;
+                updated.images = [imgUrl];
+            }
+            doSave();
+        }
+
+        function renderAccessories() {
+            const list = document.getElementById('accessoriesList');
+            if (!accessories.length) {
+                list.innerHTML = '<p style="color:#aaa;text-align:center;">No accessories added yet.</p>';
+                return;
+            }
+            list.innerHTML = accessories.map((a, i) => `
+                <div style="display:grid;grid-template-columns:80px 1fr auto;gap:15px;align-items:center;padding:15px;border:1px solid rgba(212,175,55,0.3);margin-bottom:10px;background:#111;">
+                    ${a.img ? `<img src="${a.img}" style="width:80px;height:80px;object-fit:contain;background:#000;">` : '<div style="width:80px;height:80px;background:#1a1a1a;"></div>'}
+                    <div>
+                        <span style="color:#D4AF37;font-weight:600;font-size:16px;">${a.name}</span>
+                        <span style="display:inline-block;margin-left:10px;padding:3px 10px;background:rgba(212,175,55,0.2);color:#D4AF37;font-size:12px;border:1px solid #D4AF37;">${a.type}</span>
+                        <div style="color:#D4AF37;margin-top:5px;">${a.price}</div>
+                        <div style="color:#aaa;font-size:14px;">${a.desc || ''}</div>
+                        ${a.images && a.images.length > 1 ? `<div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;">${a.images.map(img=>`<img src="${img}" style="width:36px;height:36px;object-fit:cover;border:1px solid rgba(212,175,55,0.4);border-radius:3px;">`).join('')}</div>` : ''}
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <button onclick="openEditAcc(${i})" style="padding:8px 16px;background:transparent;border:1px solid #D4AF37;color:#D4AF37;cursor:pointer;font-weight:600;">Edit</button>
+                        <button onclick="deleteAccessory(${i})" style="padding:8px 16px;background:#D4AF37;border:none;color:#000;cursor:pointer;font-weight:600;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        loadAccessoriesFromServer();
+        renderBrands();
+        showCategory('men');
+    </script>
+</body>
+</html>

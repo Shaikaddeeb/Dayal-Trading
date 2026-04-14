@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessories - Dayal Trading LLC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Dayal Trading LLC</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="men.html">Men</a></li>
+            <li><a href="women.html">Women</a></li>
+            <li><a href="brands.html">Brands</a></li>
+            <li><a href="accessories.html">Accessories</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section style="padding-top: 120px; padding-bottom: 50px; text-align: center;">
+        <h1 style="font-size: 48px; color: #D4AF37; margin-bottom: 20px;">Accessories</h1>
+        <p style="font-size: 18px; color: #aaa;">Straps, Batteries & More</p>
+    </section>
+
+    <section style="padding: 20px 50px 40px; text-align: center;">
+        <button onclick="filterAcc('All')" id="btn-All" style="padding:10px 25px;margin:5px;background:#D4AF37;border:none;color:#000;font-size:15px;cursor:pointer;font-weight:600;">All</button>
+        <button onclick="filterAcc('Strap')" id="btn-Strap" style="padding:10px 25px;margin:5px;background:transparent;border:1px solid #D4AF37;color:#D4AF37;font-size:15px;cursor:pointer;">Straps</button>
+        <button onclick="filterAcc('Battery')" id="btn-Battery" style="padding:10px 25px;margin:5px;background:transparent;border:1px solid #D4AF37;color:#D4AF37;font-size:15px;cursor:pointer;">Batteries</button>
+    </section>
+
+    <div class="watch-grid" id="accessoriesGrid"></div>
+
+    <!-- Modal with slider + zoom -->
+    <div id="accModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:2000;">
+        <!-- X fixed top-right of screen -->
+        <button onclick="closeAccModal()" style="position:fixed;top:20px;right:25px;background:none;border:none;color:#D4AF37;font-size:44px;cursor:pointer;z-index:2001;line-height:1;">&times;</button>
+        <div style="background:#0a0a0a;border:2px solid #D4AF37;padding:30px;max-width:520px;width:90%;border-radius:10px;text-align:center;max-height:85vh;overflow-y:auto;margin-top:30px;">
+            <!-- Slider -->
+            <div style="position:relative;margin-bottom:15px;">
+                <img id="accSliderImg" onclick="accZoom()" style="width:100%;max-height:280px;object-fit:contain;background:#000;border-radius:10px;cursor:zoom-in;">
+                <button id="accPrev" onclick="accSlide(-1)" style="position:absolute;left:5px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:1px solid #D4AF37;color:#D4AF37;font-size:22px;cursor:pointer;padding:5px 12px;border-radius:5px;display:none;">&#8249;</button>
+                <button id="accNext" onclick="accSlide(1)" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:1px solid #D4AF37;color:#D4AF37;font-size:22px;cursor:pointer;padding:5px 12px;border-radius:5px;display:none;">&#8250;</button>
+            </div>
+            <!-- Thumbnails -->
+            <div id="accThumbs" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:15px;"></div>
+            <div id="accModalName" style="color:#D4AF37;font-size:22px;font-weight:600;margin-bottom:8px;"></div>
+            <div id="accModalType" style="display:inline-block;padding:5px 15px;background:rgba(212,175,55,0.2);color:#D4AF37;font-size:13px;border:1px solid #D4AF37;margin-bottom:12px;border-radius:5px;"></div>
+            <div id="accModalPrice" style="color:#D4AF37;font-size:26px;font-weight:600;margin-bottom:12px;"></div>
+            <div id="accModalDesc" style="color:#ccc;font-size:15px;margin-bottom:20px;"></div>
+            <a id="accModalWA" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 30px;background:#25D366;color:#fff;text-decoration:none;font-size:16px;font-weight:600;border-radius:5px;">&#128172; Enquire on WhatsApp</a>
+        </div>
+    </div>
+
+    <!-- Zoom Modal -->
+    <div id="accZoomModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.97);display:none;align-items:center;justify-content:center;z-index:3000;" onclick="closeAccZoom()">
+        <button onclick="event.stopPropagation();closeAccZoom()" style="position:fixed;top:20px;right:25px;background:none;border:none;color:#D4AF37;font-size:44px;cursor:pointer;z-index:3001;line-height:1;">&times;</button>
+        <img id="accZoomedImg" style="max-width:92%;max-height:92%;object-fit:contain;cursor:zoom-out;">
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dayal Trading LLC. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let allAcc = [];
+        let currentFilter = 'All';
+        let accImages = [], accSlideIndex = 0;
+
+        async function loadAccessories() {
+            try {
+                const res = await fetch('/api/accessories');
+                allAcc = await res.json();
+            } catch(e) {
+                document.getElementById('accessoriesGrid').innerHTML = '<p style="text-align:center;color:red;font-size:18px;padding:80px 0;grid-column:1/-1;">Server offline — please start the server.</p>';
+                return;
+            }
+            renderGrid();
+        }
+
+        function filterAcc(type) {
+            currentFilter = type;
+            ['All','Strap','Battery'].forEach(t => {
+                const btn = document.getElementById('btn-' + t);
+                btn.style.background = t === type ? '#D4AF37' : 'transparent';
+                btn.style.color = t === type ? '#000' : '#D4AF37';
+                btn.style.border = t === type ? 'none' : '1px solid #D4AF37';
+            });
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('accessoriesGrid');
+            const filtered = currentFilter === 'All' ? allAcc : allAcc.filter(a => a.type === currentFilter);
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="text-align:center;color:#D4AF37;font-size:24px;padding:80px 0;grid-column:1/-1;">No accessories found</p>';
+                return;
+            }
+            grid.innerHTML = filtered.map((a) => {
+                const msg = encodeURIComponent(`Hi, I'm interested in this accessory:\n\nName: ${a.name}\nType: ${a.type}\nPrice: ${a.price}\nDescription: ${a.desc}`);
+                const idx = allAcc.indexOf(a);
+                const imgSrc = (a.images && a.images.length) ? a.images[0] : (a.img || '');
+                return `
+                <div class="watch-card" style="position:relative;" onclick="openModal(${idx})">
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${a.name}">` : '<div style="width:100%;height:250px;background:#1a1a1a;margin-bottom:20px;"></div>'}
+                    <div class="watch-brand">${a.type}</div>
+                    <div class="watch-name">${a.name}</div>
+                    <div class="watch-price">${a.price}</div>
+                    <div class="watch-desc">${a.desc}</div>
+                    <a href="https://wa.me/971501234567?text=${msg}" target="_blank" onclick="event.stopPropagation()" style="position:absolute;bottom:15px;right:15px;width:42px;height:42px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.4);">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:24px;height:24px;">
+                    </a>
+                </div>`;
+            }).join('');
+        }
+
+        function openModal(index) {
+            const a = allAcc[index];
+            accImages = (a.images && a.images.length) ? a.images : (a.img ? [a.img] : []);
+            accSlideIndex = 0;
+            updateSlider();
+            document.getElementById('accModalName').textContent = a.name;
+            document.getElementById('accModalType').textContent = a.type;
+            document.getElementById('accModalPrice').textContent = a.price;
+            document.getElementById('accModalDesc').textContent = a.desc;
+            const msg = encodeURIComponent(`Hi, I'm interested in this accessory:\n\nName: ${a.name}\nType: ${a.type}\nPrice: ${a.price}\nDescription: ${a.desc}`);
+            document.getElementById('accModalWA').href = `https://wa.me/971501234567?text=${msg}`;
+            document.getElementById('accModal').style.display = 'flex';
+        }
+
+        function updateSlider() {
+            const img = document.getElementById('accSliderImg');
+            const thumbs = document.getElementById('accThumbs');
+            const prev = document.getElementById('accPrev');
+            const next = document.getElementById('accNext');
+            if (accImages.length === 0) { img.style.display = 'none'; return; }
+            img.style.display = 'block';
+            img.src = accImages[accSlideIndex];
+            prev.style.display = accImages.length > 1 ? 'block' : 'none';
+            next.style.display = accImages.length > 1 ? 'block' : 'none';
+            thumbs.innerHTML = accImages.map((src, i) => `<img src="${src}" onclick="accGoTo(${i})" style="width:50px;height:50px;object-fit:cover;cursor:pointer;border:2px solid ${i===accSlideIndex?'#D4AF37':'transparent'};border-radius:5px;">`).join('');
+        }
+
+        function accSlide(dir) {
+            accSlideIndex = (accSlideIndex + dir + accImages.length) % accImages.length;
+            updateSlider();
+        }
+
+        function accGoTo(i) {
+            accSlideIndex = i;
+            updateSlider();
+        }
+
+        function accZoom() {
+            document.getElementById('accZoomedImg').src = accImages[accSlideIndex];
+            document.getElementById('accZoomModal').style.display = 'flex';
+        }
+
+        function closeAccZoom() { document.getElementById('accZoomModal').style.display = 'none'; }
+        function closeAccModal() { document.getElementById('accModal').style.display = 'none'; }
+
+        loadAccessories();
+    </script>
+</body>
+</html>

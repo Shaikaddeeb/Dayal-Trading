@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Brands - Dayal Trading LLC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Dayal Trading LLC</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="men.html">Men</a></li>
+            <li><a href="women.html">Women</a></li>
+            <li><a href="brands.html">Brands</a></li>
+            <li><a href="accessories.html">Accessories</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section style="padding-top: 120px; padding-bottom: 50px; text-align: center;">
+        <h1 style="font-size: 48px; color: #D4AF37; margin-bottom: 20px;">Premium Brands</h1>
+        <p style="font-size: 18px; color: #aaa;">World-Class Craftsmanship</p>
+    </section>
+
+    <div id="brandsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; padding: 50px; max-width: 1400px; margin: 0 auto;"></div>
+
+    <div id="brandWatches" style="display: none;">
+        <h2 style="text-align: center; color: #D4AF37; font-size: 36px; margin: 50px 0;" id="brandTitle"></h2>
+        <div class="watch-grid" id="brandWatchesGrid"></div>
+    </div>
+
+    <!-- Watch Details Modal -->
+    <div id="watchModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:2000;">
+        <button onclick="closeModal()" style="position:fixed;top:20px;right:25px;background:none;border:none;color:#D4AF37;font-size:44px;cursor:pointer;z-index:2001;line-height:1;">&times;</button>
+        <div style="background:#0a0a0a;border:2px solid #D4AF37;padding:30px;max-width:520px;width:90%;border-radius:10px;max-height:85vh;overflow-y:auto;margin-top:30px;">
+            <div style="text-align: center;">
+                <div style="position:relative;margin-bottom:15px;">
+                    <img id="modalImage" onclick="zoomImage()" style="width:100%;max-height:280px;object-fit:contain;background:#000;border-radius:10px;cursor:zoom-in;">
+                    <button id="modalPrev" onclick="slideModal(-1)" style="position:absolute;left:5px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:1px solid #D4AF37;color:#D4AF37;font-size:22px;cursor:pointer;padding:5px 12px;border-radius:5px;display:none;">&#8249;</button>
+                    <button id="modalNext" onclick="slideModal(1)" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:1px solid #D4AF37;color:#D4AF37;font-size:22px;cursor:pointer;padding:5px 12px;border-radius:5px;display:none;">&#8250;</button>
+                </div>
+                <div id="modalThumbs" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:15px;"></div>
+                <div id="modalBrand" style="color: #D4AF37; font-size: 18px; font-weight: 600; margin-bottom: 10px;"></div>
+                <div id="modalName" style="font-size: 24px; margin-bottom: 15px; color: #fff;"></div>
+                <div id="modalPrice" style="color: #D4AF37; font-size: 28px; font-weight: 600; margin-bottom: 15px;"></div>
+                <div style="display: inline-block; padding: 8px 20px; background: rgba(212, 175, 55, 0.2); color: #D4AF37; font-size: 14px; border: 1px solid #D4AF37; margin-bottom: 20px; border-radius: 5px;">
+                    <span id="modalType"></span>
+                </div>
+                <div id="modalDesc" style="color: #ccc; font-size: 16px; line-height: 1.5; margin-bottom:20px;"></div>
+                <a id="modalWhatsApp" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 30px;background:#25D366;color:#fff;text-decoration:none;font-size:16px;font-weight:600;border-radius:5px;">&#128172; Enquire on WhatsApp</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Image Zoom Modal -->
+    <div id="imageZoomModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 3000;" onclick="closeZoom()">
+        <button onclick="closeZoom()" style="position:absolute;top:20px;right:30px;background:none;border:none;color:#D4AF37;font-size:40px;cursor:pointer;line-height:1;">&times;</button>
+        <img id="zoomedImage" style="max-width: 90%; max-height: 90%; object-fit: contain; cursor: zoom-out;">
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dayal Trading LLC. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // All watches loaded from API
+        let allWatchesDB = [];
+
+        async function loadAllWatches() {
+            try {
+                const [men, women] = await Promise.all([
+                    fetch('/api/watches/men').then(r => r.json()),
+                    fetch('/api/watches/women').then(r => r.json())
+                ]);
+                allWatchesDB = [...men, ...women];
+                // After loading, also add any DB brands to the grid
+                addDBBrandsToGrid();
+            } catch(e) { allWatchesDB = []; }
+        }
+
+        function addDBBrandsToGrid() {
+            // Get unique brands from DB that aren't already in the grid
+            const existingNames = getAllBrands().map(b => b.name.toLowerCase());
+            const dbBrands = [...new Set(allWatchesDB.map(w => w.brand))]
+                .filter(b => !existingNames.includes(b.toLowerCase()));
+            if (!dbBrands.length) return;
+            const grid = document.getElementById('brandsGrid');
+            dbBrands.forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'brand-card';
+                div.onclick = () => filterByBrand(name);
+                div.innerHTML = `<div style="background:#0a0a0a;padding:60px;border:1px solid rgba(212,175,55,0.3);text-align:center;cursor:pointer;transition:all 0.3s;"
+                    onmouseenter="this.style.transform='translateY(-10px)';this.style.borderColor='#D4AF37';this.style.boxShadow='0 20px 40px rgba(212,175,55,0.3)';"
+                    onmouseleave="this.style.transform='translateY(0)';this.style.borderColor='rgba(212,175,55,0.3)';this.style.boxShadow='none';">
+                    <h2 style="color:#D4AF37;font-size:36px;margin-bottom:10px;">${name.toUpperCase()}</h2>
+                    <p style="color:#aaa;">Premium Timepieces</p>
+                </div>`;
+                grid.appendChild(div);
+            });
+        }
+
+        function filterByBrand(brand) {
+            const filtered = allWatchesDB.filter(w => w.brand.toLowerCase() === brand.toLowerCase());
+            document.getElementById('brandTitle').textContent = brand + ' Collection';
+            const container = document.getElementById('brandWatchesGrid');
+
+            if (!filtered.length) {
+                container.innerHTML = '<p style="text-align:center;color:#D4AF37;font-size:24px;padding:80px 0;">No watches found for this brand</p>';
+            } else {
+                container.innerHTML = filtered.map(watch => {
+                    const imgSrc = (watch.images && watch.images.length) ? watch.images[0].url || watch.images[0] : watch.img;
+                    const msg = encodeURIComponent(`Hi, I'm interested in:\n\nBrand: ${watch.brand}\nName: ${watch.name}\nPrice: ${watch.price}\nType: ${watch.type}\nDescription: ${watch.desc}`);
+                    return `
+                    <div class="watch-card" onclick="showModal('${watch.brand.replace(/'/g,"&#39;")}','${watch.name.replace(/'/g,"&#39;")}','${watch.price}','${watch.type}','${watch.desc.replace(/'/g,"&#39;")}','${imgSrc}')">
+                        <img src="${imgSrc}" alt="${watch.name}">
+                        <div class="watch-brand">${watch.brand}</div>
+                        <div class="watch-name">${watch.name}</div>
+                        <div class="watch-price">${watch.price}</div>
+                        <div class="watch-desc">${watch.desc}</div>
+                        <div class="watch-type">${watch.type}</div>
+                        <a href="https://wa.me/971501234567?text=${msg}" target="_blank" onclick="event.stopPropagation()" style="position:absolute;bottom:15px;right:15px;width:42px;height:42px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.4);">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:24px;height:24px;">
+                        </a>
+                    </div>`;
+                }).join('');
+            }
+            document.getElementById('brandWatches').style.display = 'block';
+            document.getElementById('brandWatches').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        let modalImages = [], modalSlideIdx = 0;
+
+        function showModal(brand, name, price, type, desc, img, images) {
+            modalImages = (images && images.length) ? images : (img ? [img] : []);
+            modalSlideIdx = 0;
+            updateModalSlider();
+            document.getElementById('modalBrand').textContent = brand;
+            document.getElementById('modalName').textContent = name;
+            document.getElementById('modalPrice').textContent = price;
+            document.getElementById('modalType').textContent = type;
+            document.getElementById('modalDesc').textContent = desc;
+            const msg = encodeURIComponent(`Hi, I'm interested in this watch:\n\nBrand: ${brand}\nName: ${name}\nPrice: ${price}\nType: ${type}\nDescription: ${desc}`);
+            document.getElementById('modalWhatsApp').href = `https://wa.me/971501234567?text=${msg}`;
+            document.getElementById('watchModal').style.display = 'flex';
+        }
+
+        function updateModalSlider() {
+            const img = document.getElementById('modalImage');
+            const thumbs = document.getElementById('modalThumbs');
+            if (!modalImages.length) return;
+            img.src = modalImages[modalSlideIdx];
+            document.getElementById('modalPrev').style.display = modalImages.length > 1 ? 'block' : 'none';
+            document.getElementById('modalNext').style.display = modalImages.length > 1 ? 'block' : 'none';
+            thumbs.innerHTML = modalImages.map((s, i) => `<img src="${s}" onclick="modalGoTo(${i})" style="width:50px;height:50px;object-fit:cover;cursor:pointer;border:2px solid ${i===modalSlideIdx?'#D4AF37':'transparent'};border-radius:5px;">`).join('');
+        }
+
+        function slideModal(dir) { modalSlideIdx = (modalSlideIdx + dir + modalImages.length) % modalImages.length; updateModalSlider(); }
+        function modalGoTo(i) { modalSlideIdx = i; updateModalSlider(); }
+
+        function closeModal() { document.getElementById('watchModal').style.display = 'none'; }
+
+        function zoomImage() {
+            document.getElementById('zoomedImage').src = modalImages[modalSlideIdx];
+            document.getElementById('imageZoomModal').style.display = 'flex';
+        }
+        function closeZoom() { document.getElementById('imageZoomModal').style.display = 'none'; }
+
+        const defaultBrands = [
+            { name: 'Rolex', tagline: 'Swiss Luxury Excellence' },
+            { name: 'Omega', tagline: 'Precision Timekeeping' },
+            { name: 'Tag Heuer', tagline: 'Swiss Avant-Garde' },
+            { name: 'Seiko', tagline: 'Japanese Innovation' },
+            { name: 'Tissot', tagline: 'Swiss Tradition' },
+            { name: 'Casio', tagline: 'Technology & Style' },
+            { name: 'Fossil', tagline: 'American Classic' },
+            { name: 'Citizen', tagline: 'Eco-Drive Technology' },
+            { name: 'Longines', tagline: 'Elegance & Heritage' },
+            { name: 'Rado', tagline: 'Master of Materials' }
+        ];
+
+        function getAllBrands() {
+            const custom = JSON.parse(localStorage.getItem('customBrands') || '[]');
+            const deleted = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
+            const active = defaultBrands.filter(b => !deleted.includes(b.name));
+            return [...active, ...custom];
+        }
+
+        function renderBrandGrid() {
+            const grid = document.getElementById('brandsGrid');
+            grid.innerHTML = getAllBrands().map(b => `
+                <div class="brand-card" onclick="filterByBrand('${b.name}')">
+                    <div style="background: #0a0a0a; padding: 60px; border: 1px solid rgba(212, 175, 55, 0.3); text-align: center; cursor: pointer; transition: all 0.3s;"
+                        onmouseenter="this.style.transform='translateY(-10px)';this.style.borderColor='#D4AF37';this.style.boxShadow='0 20px 40px rgba(212,175,55,0.3)';"
+                        onmouseleave="this.style.transform='translateY(0)';this.style.borderColor='rgba(212,175,55,0.3)';this.style.boxShadow='none';">
+                        <h2 style="color: #D4AF37; font-size: 36px; margin-bottom: 10px;">${b.name.toUpperCase()}</h2>
+                        <p style="color: #aaa;">${b.tagline}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        renderBrandGrid();
+        loadAllWatches();
+    </script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #000 url('mbacgr.jpeg') center/cover fixed no-repeat;
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #D4AF37;
+    font-family: 'Playfair Display', serif;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 300;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #D4AF37;
+}
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+
+
+.watch-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+}
+
+.watch {
+    width: 500px;
+    height: 500px;
+    filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.3));
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 2s 0.5s forwards;
+}
+
+.hero-title {
+    font-size: 64px;
+    color: #D4AF37;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.hero-tagline {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.cta-btn {
+    padding: 15px 40px;
+    background: transparent;
+    border: 2px solid #D4AF37;
+    color: #D4AF37;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+}
+
+.cta-btn:hover {
+    background: #D4AF37;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.search-section {
+    padding: 100px 50px;
+    text-align: center;
+    background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+}
+
+.search-section h2 {
+    font-size: 42px;
+    color: #D4AF37;
+    margin-bottom: 40px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-container input,
+.search-container select {
+    padding: 15px 25px;
+    background: #1a1a1a;
+    border: 1px solid #D4AF37;
+    color: #fff;
+    font-size: 16px;
+    min-width: 250px;
+}
+
+.search-btn {
+    padding: 15px 40px;
+    background: #D4AF37;
+    border: none;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+}
+
+.featured-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    padding: 50px;
+}
+
+.featured-card {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.featured-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.featured-card:hover img {
+    transform: scale(1.1);
+}
+
+.featured-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 40px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    transition: all 0.3s;
+}
+
+.featured-overlay h3 {
+    font-size: 32px;
+    color: #D4AF37;
+    margin-bottom: 10px;
+}
+
+.featured-overlay p {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.watch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 50px;
+}
+
+.watch-card {
+    background: #0a0a0a;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+}
+
+.watch-card:hover {
+    transform: translateY(-10px);
+    border-color: #D4AF37;
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+}
+
+.watch-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    background: #000;
+}
+
+.watch-brand {
+    color: #D4AF37;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.watch-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.watch-price {
+    font-size: 24px;
+    color: #D4AF37;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.watch-desc {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.watch-type {
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(212, 175, 55, 0.2);
+    color: #D4AF37;
+    font-size: 12px;
+    border: 1px solid #D4AF37;
+}
+
+.view-more-btn {
+    display: block;
+    margin: 50px auto;
+    padding: 15px 50px;
+    background: transparent;
+    border: 2px solid #D4AF37;
+    color: #D4AF37;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.view-more-btn:hover {
+    background: #D4AF37;
+    color: #000;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    color: #666;
+}
+
+/* Scrolling ticker strip */
+.ticker-wrap {
+    width: 100%;
+    background: linear-gradient(90deg, #0a0a0a, #111, #0a0a0a);
+    border-top: 1px solid rgba(212,175,55,0.4);
+    border-bottom: 1px solid rgba(212,175,55,0.4);
+    padding: 14px 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.ticker-track {
+    display: inline-block;
+    animation: ticker-scroll 35s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+.ticker-item {
+    display: inline-block;
+    padding: 0 50px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #D4AF37;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.ticker-item span {
+    color: rgba(212,175,55,0.4);
+    margin-right: 50px;
+    font-size: 18px;
+}
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+
+    /* ── Navbar ── */
+    .navbar {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .logo { font-size: 18px; }
+    .nav-links {
+        gap: 10px;
+        font-size: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+    .nav-links li a { padding: 4px 6px; }
+
+    /* ── Hero ── */
+    .hero-title  { font-size: 32px; }
+    .hero-tagline { font-size: 14px; letter-spacing: 1px; }
+    .cta-btn { padding: 12px 28px; font-size: 14px; }
+    .watch { width: 220px; height: 220px; }
+
+    /* ── Search section ── */
+    .search-section { padding: 60px 20px; }
+    .search-section h2 { font-size: 24px; margin-bottom: 25px; }
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .search-container input,
+    .search-container select,
+    .search-container > div { min-width: unset; width: 100%; }
+    .search-btn { width: 100%; }
+
+    /* ── Featured cards ── */
+    .featured-sections {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 15px;
+    }
+    .featured-card { height: 220px; }
+    .featured-overlay h3 { font-size: 22px; }
+    .featured-overlay { padding: 20px; }
+
+    /* ── Watch grid ── */
+    .watch-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 15px;
+    }
+    .watch-card { padding: 12px; }
+    .watch-card img { height: 160px; }
+    .watch-name  { font-size: 14px; }
+    .watch-price { font-size: 16px; }
+    .watch-desc  { font-size: 12px; }
+    .watch-brand { font-size: 12px; }
+
+    /* ── View more btn ── */
+    .view-more-btn { padding: 12px 30px; font-size: 14px; margin: 30px auto; }
+
+    /* ── Watch modal ── */
+    #watchModal > div {
+        padding: 20px !important;
+        max-width: 95vw !important;
+        margin-top: 60px !important;
+    }
+    #modalImage { max-height: 200px !important; }
+
+    /* ── Zoom modal ── */
+    #imageZoomModal button { font-size: 28px !important; padding: 5px 10px !important; }
+    #zoomedImage { max-width: 95% !important; }
+
+    /* ── Admin watch list cards ── */
+    [style*="grid-template-columns:150px 1fr auto"] {
+        grid-template-columns: 80px 1fr !important;
+        grid-template-rows: auto auto !important;
+    }
+    [style*="grid-template-columns:150px 1fr auto"] img {
+        width: 80px !important;
+        height: 80px !important;
+    }
+    [style*="grid-template-columns:150px 1fr auto"] > div:last-child {
+        grid-column: 1 / -1;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        justify-content: flex-end;
+    }
+
+    /* ── Admin forms ── */
+    [style*="max-width: 800px"],
+    [style*="max-width: 1400px"] {
+        padding: 20px !important;
+        margin: 0 10px 30px !important;
+    }
+    [style*="width: 400px"] { width: 100% !important; }
+    [style*="margin-right: 10px"] { margin-right: 0 !important; }
+
+    /* ── Edit modals ── */
+    #editModal > div,
+    #editAccModal > div {
+        padding: 20px !important;
+        max-width: 95vw !important;
+        margin-top: 60px !important;
+    }
+
+    /* ── Ticker ── */
+    .ticker-item { font-size: 11px; padding: 0 25px; letter-spacing: 1px; }
+
+    /* ── Footer ── */
+    footer { font-size: 12px; padding: 20px; }
+}
+
+@media (max-width: 480px) {
+    .watch-grid {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+    .hero-title { font-size: 26px; }
+    .nav-links { font-size: 11px; gap: 6px; }
+}

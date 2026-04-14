@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Dayal Trading LLC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Dayal Trading LLC</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="men.html">Men</a></li>
+            <li><a href="women.html">Women</a></li>
+            <li><a href="brands.html">Brands</a></li>
+            <li><a href="accessories.html">Accessories</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section style="padding-top: 120px; padding-bottom: 50px; max-width: 1000px; margin: 0 auto; padding-left: 50px; padding-right: 50px;">
+        <h1 style="font-size: 48px; color: #D4AF37; margin-bottom: 30px; text-align: center;">About Dayal Trading LLC</h1>
+        
+        <div style="line-height: 1.8; font-size: 18px; color: #ccc; margin-bottom: 50px;">
+            <p style="margin-bottom: 20px;">
+                Dayal Trading LLC is a trusted destination for luxury and high-quality watches. We offer an exclusive collection of timepieces from world-renowned brands, combining craftsmanship, elegance, and precision.
+            </p>
+            <p style="margin-bottom: 20px;">
+                Our mission is to bring timeless designs and premium watches to customers who value quality, style, and reliability. Each timepiece in our collection is carefully selected to represent the pinnacle of horological excellence.
+            </p>
+            <p style="margin-bottom: 20px;">
+                With decades of experience in the luxury watch industry, we pride ourselves on offering authentic products, exceptional customer service, and expert guidance to help you find the perfect watch that matches your style and personality.
+            </p>
+        </div>
+
+        <div style="background: #0a0a0a; padding: 40px; border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 50px;">
+            <h2 style="color: #D4AF37; font-size: 32px; margin-bottom: 30px; text-align: center;">Contact Information</h2>
+            <div style="display: grid; gap: 20px; font-size: 18px;">
+                <div>
+                    <strong style="color: #D4AF37;">Location:</strong>
+                    <span style="color: #ccc; margin-left: 10px;">Dubai, UAE</span>
+                </div>
+                <div>
+                    <strong style="color: #D4AF37;">Phone:</strong>
+                    <span style="color: #ccc; margin-left: 10px;">+971 50 123 4567</span>
+                </div>
+                <div>
+                    <strong style="color: #D4AF37;">Email:</strong>
+                    <span style="color: #ccc; margin-left: 10px;">info@dayaltrading.com</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 100px;">
+            <button onclick="showAdminLogin()" style="background: transparent; border: none; color: #333; font-size: 12px; cursor: pointer; padding: 5px;">•</button>
+        </div>
+    </section>
+
+    <div id="adminLogin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: #0a0a0a; padding: 50px; border: 2px solid #D4AF37; max-width: 400px; width: 90%;">
+            <h2 style="color: #D4AF37; text-align: center; margin-bottom: 30px;">Admin Login</h2>
+            <input type="text" id="adminUsername" placeholder="Username" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <input type="password" id="adminPassword" placeholder="Password" style="width: 100%; padding: 15px; margin-bottom: 30px; background: #1a1a1a; border: 1px solid #D4AF37; color: #fff; font-size: 16px;">
+            <button onclick="adminLogin()" style="width: 100%; padding: 15px; background: #D4AF37; border: none; color: #000; font-size: 16px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Login</button>
+            <button onclick="document.getElementById('adminLogin').style.display='none'" style="width: 100%; padding: 15px; background: transparent; border: 1px solid #D4AF37; color: #D4AF37; font-size: 16px; cursor: pointer;">Cancel</button>
+            <p id="loginError" style="color: red; text-align: center; margin-top: 20px; display: none;">Invalid credentials</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dayal Trading LLC. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminToken', data.token);
+                    window.location.href = 'admin.html';
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            }).catch(() => {
+                document.getElementById('loginError').style.display = 'block';
+            });
+        }
+
+        function showAdminLogin() {
+            document.getElementById('adminLogin').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

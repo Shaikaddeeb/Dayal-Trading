@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dayal Trading LLC - Luxury Watches</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Dayal Trading LLC</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="men.html">Men</a></li>
+            <li><a href="women.html">Women</a></li>
+            <li><a href="brands.html">Brands</a></li>
+            <li><a href="accessories.html">Accessories</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <!-- Local Watch Video Background -->
+        <video autoplay muted loop playsinline id="heroBgVideo"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+            <source src="hero.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay" style="z-index:1;background:rgba(0,0,0,0.5);"></div>
+        <div class="hero-content" style="z-index:2;">
+            <h1 class="hero-title">Dayal Trading LLC</h1>
+            <p class="hero-tagline">Timeless Luxury. Precision in Every Second.</p>
+            <button class="cta-btn" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">Explore Collection</button>
+        </div>
+    </section>
+
+    <section class="search-section" id="collection">
+        <h2>Find Your Perfect Timepiece</h2>
+        <div class="search-container">
+            <div style="position:relative;min-width:250px;">
+                <input type="text" id="searchBrand" placeholder="Search by Brand" autocomplete="off"
+                    oninput="showSearchDropdown()" onfocus="showSearchDropdown()" style="width:100%;">
+                <div id="searchDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1a1a1a;border:1px solid #D4AF37;border-top:none;z-index:999;max-height:220px;overflow-y:auto;"></div>
+            </div>
+            <select id="searchType">
+                <option value="">All Types</option>
+                <option value="Classic">Classic</option>
+                <option value="Sport">Sport</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Digital">Digital</option>
+            </select>
+            <button class="search-btn" onclick="searchWatches()">Search</button>
+        </div>
+    </section>
+
+    <section class="featured-sections">
+        <div class="featured-card" onclick="location.href='men.html'">
+            <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800" alt="Men's Watches">
+            <div class="featured-overlay">
+                <h3>Men's Collection</h3>
+                <p>Discover Masculine Elegance</p>
+            </div>
+        </div>
+        <div class="featured-card" onclick="location.href='women.html'">
+            <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800" alt="Women's Watches">
+            <div class="featured-overlay">
+                <h3>Women's Collection</h3>
+                <p>Timeless Feminine Grace</p>
+            </div>
+        </div>
+        <div class="featured-card" onclick="location.href='brands.html'">
+            <img src="https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800" alt="Premium Brands">
+            <div class="featured-overlay">
+                <h3>Premium Brands</h3>
+                <p>World-Class Craftsmanship</p>
+            </div>
+        </div>
+        <div class="featured-card" onclick="location.href='accessories.html'">
+            <img src="https://images.unsplash.com/photo-1548169874-53e85f753f1e?w=800" alt="Accessories">
+            <div class="featured-overlay">
+                <h3>Accessories</h3>
+                <p>Straps, Batteries & More</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Watches from DB -->
+    <section style="padding:50px;background:#0a0a0a;">
+        <h2 style="text-align:center;color:#D4AF37;font-size:36px;margin-bottom:40px;">Men's Highlights</h2>
+        <div class="watch-grid" id="homeMenGrid"></div>
+        <h2 style="text-align:center;color:#D4AF37;font-size:36px;margin:50px 0 40px;">Women's Highlights</h2>
+        <div class="watch-grid" id="homeWomenGrid"></div>
+        <div style="text-align:center;margin-top:40px;">
+            <a href="men.html" style="display:inline-block;padding:14px 40px;border:2px solid #D4AF37;color:#D4AF37;text-decoration:none;font-size:16px;margin:0 10px;transition:all 0.3s;" onmouseover="this.style.background='#D4AF37';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#D4AF37'">View All Men</a>
+            <a href="women.html" style="display:inline-block;padding:14px 40px;border:2px solid #D4AF37;color:#D4AF37;text-decoration:none;font-size:16px;margin:0 10px;transition:all 0.3s;" onmouseover="this.style.background='#D4AF37';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#D4AF37'">View All Women</a>
+        </div>
+    </section>
+
+    <!-- Ticker Strip -->
+    <div class="ticker-wrap">
+        <div class="ticker-track">
+            <span class="ticker-item"><span>✦</span> Dayal Trading LLC — Dubai's Finest Watch Store</span>
+            <span class="ticker-item"><span>✦</span> Luxury Timepieces for Every Wrist</span>
+            <span class="ticker-item"><span>✦</span> Rolex · Omega · Tag Heuer · Seiko · Casio · Tissot</span>
+            <span class="ticker-item"><span>✦</span> Time is the Most Precious Luxury</span>
+            <span class="ticker-item"><span>✦</span> Authentic Watches — Guaranteed Quality</span>
+            <span class="ticker-item"><span>✦</span> WhatsApp Us for Exclusive Deals</span>
+            <span class="ticker-item"><span>✦</span> A Watch is Not Just an Accessory — It's a Statement</span>
+            <span class="ticker-item"><span>✦</span> Dayal Trading LLC — Dubai's Finest Watch Store</span>
+            <span class="ticker-item"><span>✦</span> Luxury Timepieces for Every Wrist</span>
+            <span class="ticker-item"><span>✦</span> Rolex · Omega · Tag Heuer · Seiko · Casio · Tissot</span>
+            <span class="ticker-item"><span>✦</span> Time is the Most Precious Luxury</span>
+            <span class="ticker-item"><span>✦</span> Authentic Watches — Guaranteed Quality</span>
+            <span class="ticker-item"><span>✦</span> WhatsApp Us for Exclusive Deals</span>
+            <span class="ticker-item"><span>✦</span> A Watch is Not Just an Accessory — It's a Statement</span>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dayal Trading LLC. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Search dropdown
+        let allHomeWatches = [];
+        async function showSearchDropdown() {
+            const val = document.getElementById('searchBrand').value.toLowerCase();
+            if (!allHomeWatches.length) {
+                try {
+                    const [m, w] = await Promise.all([
+                        fetch('/api/watches/men').then(r => r.json()),
+                        fetch('/api/watches/women').then(r => r.json())
+                    ]);
+                    allHomeWatches = [...m, ...w];
+                } catch(e) { return; }
+            }
+            const brands = [...new Set(allHomeWatches.map(w => w.brand))];
+            const names  = [...new Set(allHomeWatches.map(w => w.name))];
+            const all    = [...brands, ...names];
+            const filtered = all.filter(x => x.toLowerCase().includes(val));
+            const dd = document.getElementById('searchDropdown');
+            if (!filtered.length) { dd.style.display = 'none'; return; }
+            dd.style.display = 'block';
+            dd.innerHTML = filtered.map(x =>
+                `<div onclick="selectSearch('${x.replace(/'/g,"&#39;")}')" style="padding:12px 15px;cursor:pointer;color:#fff;border-bottom:1px solid rgba(212,175,55,0.15);font-size:15px;" onmouseover="this.style.background='rgba(212,175,55,0.15)'" onmouseout="this.style.background='transparent'">${x}</div>`
+            ).join('');
+        }
+        function selectSearch(val) {
+            document.getElementById('searchBrand').value = val;
+            document.getElementById('searchDropdown').style.display = 'none';
+        }
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#searchBrand') && !e.target.closest('#searchDropdown'))
+                document.getElementById('searchDropdown').style.display = 'none';
+        });
+
+        // Load 3 men + 3 women watches from API for homepage
+        async function loadHomeWatches() {
+            try {
+                const [men, women] = await Promise.all([
+                    fetch('/api/watches/men').then(r => r.json()),
+                    fetch('/api/watches/women').then(r => r.json())
+                ]);
+                renderHomeGrid(men.slice(0, 3), 'homeMenGrid');
+                renderHomeGrid(women.slice(0, 3), 'homeWomenGrid');
+            } catch(e) {
+                document.getElementById('homeMenGrid').innerHTML = '<p style="color:#aaa;text-align:center;grid-column:1/-1;">Add watches via admin to see them here.</p>';
+                document.getElementById('homeWomenGrid').innerHTML = '';
+            }
+        }
+        function renderHomeGrid(watches, id) {
+            const grid = document.getElementById(id);
+            if (!watches.length) { grid.innerHTML = '<p style="color:#aaa;text-align:center;grid-column:1/-1;">No watches yet.</p>'; return; }
+            grid.innerHTML = watches.map(w => {
+                const msg = encodeURIComponent(`Hi, I'm interested in: ${w.brand} ${w.name} - ${w.price}`);
+                return `<div class="watch-card" style="cursor:default;">
+                    <img src="${w.img}" alt="${w.name}">
+                    <div class="watch-brand">${w.brand}</div>
+                    <div class="watch-name">${w.name}</div>
+                    <div class="watch-price">${w.price}</div>
+                    <div class="watch-type">${w.type}</div>
+                    <a href="https://wa.me/971501234567?text=${msg}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;padding:10px;background:#25D366;color:#fff;text-decoration:none;font-size:14px;font-weight:600;border-radius:5px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:18px;height:18px;"> WhatsApp
+                    </a>
+                </div>`;
+            }).join('');
+        }
+        loadHomeWatches();
+    </script>
+</body>
+</html>
