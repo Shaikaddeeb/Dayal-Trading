@@ -261,6 +261,11 @@ app.delete('/api/watches/:id', requireAuth, csrfProtect, async (req, res) => {
     }
 });
 
+// CSRF token (simple implementation)
+app.get('/api/csrf-token', (req, res) => {
+    res.json({ csrfToken: 'dayal-csrf-' + Date.now() });
+});
+
 // Admin login
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body || {};

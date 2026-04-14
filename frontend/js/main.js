@@ -72,7 +72,7 @@ function displayWatches(watches, containerId, limit = null) {
             <div class="watch-price">${watch.price}</div>
             <div class="watch-desc">${watch.desc}</div>
             <div class="watch-type">${watch.type}</div>
-            <a href="https://wa.me/971501234567?text=${msg}" target="_blank" onclick="event.stopPropagation()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:15px;padding:10px;background:#25D366;color:#fff;text-decoration:none;font-size:14px;font-weight:600;border-radius:5px;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px;height:20px;"> WhatsApp</a>
+            <a href="https://wa.me/971501234567?text=${msg}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:15px;padding:10px;background:#25D366;color:#fff;text-decoration:none;font-size:14px;font-weight:600;border-radius:5px;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px;height:20px;"> WhatsApp</a>
         </div>`;
     }).join('');
 }
@@ -111,7 +111,7 @@ function createWatchModal() {
                         <span id="modalType"></span>
                     </div>
                     <div id="modalDesc" style="color: #ccc; font-size: 16px; line-height: 1.5; margin-bottom: 20px;"></div>
-                    <a id="modalWhatsApp" href="#" target="_blank" style="display: inline-block; padding: 12px 30px; background: #25D366; color: #fff; text-decoration: none; font-size: 16px; font-weight: 600; border-radius: 5px;">💬 Enquire on WhatsApp</a>
+                    <a id="modalWhatsApp" href="#" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 30px; background: #25D366; color: #fff; text-decoration: none; font-size: 16px; font-weight: 600; border-radius: 5px;">💬 Enquire on WhatsApp</a>
                 </div>
             </div>
         </div>
